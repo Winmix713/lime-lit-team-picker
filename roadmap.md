@@ -1,0 +1,12 @@
+# Felhős betöltés gyorsítása
+- [x] Ligaeredmények IndexedDB gyorsítótára, verzió- és bemenetellenőrzéssel.
+- [x] Újranyitási betöltés és gyorsítótárjelzés bekötése.
+- [x] Ekvivalencia-tesztek és második betöltés ellenőrzése böngészőben (24 720 mérkőzés, 5,52 s; az 1–3 s cél még nem teljesül).
+- [x] Share version requests with a three-second cache and forced fresh checks.
+- [x] Validate downloaded versions, fingerprints and counts; retry inconsistencies once.
+- [x] Measure each load phase and expose the latest timings in the status area.
+- [x] Run focused tests and compare real browser request waterfalls.
+- [x] Közvetlen szezonimport elérhetővé tétele a motor felületén.
+- [x] Felhős betöltés átállítása közvetlen meccsadatokra.
+- [x] Szezonlekérések összevonása a meglévő jogosultságok megtartásával.
+- [x] Tesztek és az oldal tényleges betöltésének ellenőrzése (103 szezon, 24720 mérkőzés, egy adatlekérés, hibamentes újranyitás).- [x] M1 logisztikus regresszió gyorsítása nulla-allokációs Float64Array belső ciklussal (eredmények bitre azonosak), ekvivalencia-teszttel és teljes tesztfuttatással.

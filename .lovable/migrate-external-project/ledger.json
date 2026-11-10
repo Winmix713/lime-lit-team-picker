@@ -1,0 +1,67 @@
+{
+ "capabilities": [
+  {
+   "capability": "code",
+   "source": "Vite React SPA (WinMix studio)",
+   "outcome": "migrate",
+   "status": "verified",
+   "next_action": "none"
+  },
+  {
+   "capability": "schema",
+   "source": "supabase/migrations (6 files)",
+   "outcome": "migrate",
+   "status": "verified",
+   "next_action": "none"
+  },
+  {
+   "capability": "records",
+   "source": "Supabase tables",
+   "outcome": "migrate",
+   "status": "pending",
+   "next_action": "user to attach CSV exports of winmix_* tables"
+  },
+  {
+   "capability": "auth_identities",
+   "source": "Supabase Auth (operator email/password)",
+   "outcome": "migrate",
+   "status": "pending",
+   "next_action": "user export (emails + original IDs) of operator accounts"
+  },
+  {
+   "capability": "authorization",
+   "source": "RLS + role table",
+   "outcome": "migrate",
+   "status": "verified",
+   "next_action": "operator rows recreated after user import"
+  },
+  {
+   "capability": "edge_functions",
+   "source": "winmix-ingest, winmix-engine",
+   "outcome": "migrate",
+   "status": "migrated",
+   "next_action": "ingest -> DB function; engine -> /api/public/winmix-engine"
+  },
+  {
+   "capability": "schedules",
+   "source": "winmix-engine cron (LOVABLE_CRON_SECRET)",
+   "outcome": "migrate",
+   "status": "pending",
+   "next_action": "source had no schedule definition; create when engine jobs are queued"
+  },
+  {
+   "capability": "secrets",
+   "source": "WINMIX_SERVER_SECRET, LOVABLE_CRON_SECRET",
+   "outcome": "migrate",
+   "status": "verified",
+   "next_action": "managed cron secret replaces WINMIX_SERVER_SECRET"
+  },
+  {
+   "capability": "verification",
+   "source": "-",
+   "outcome": "migrate",
+   "status": "partial",
+   "next_action": "UI + backend reads verified; upload and engine unverified without data"
+  }
+ ]
+}
