@@ -577,17 +577,17 @@ class PopoverBoundary extends React.Component<
   { onError: () => void; children: React.ReactNode },
   { failed: boolean }
 > {
-  state: { failed: boolean } = { failed: false };
+  override state: { failed: boolean } = { failed: false };
 
   static getDerivedStateFromError() {
     return { failed: true };
   }
 
-  componentDidCatch() {
+  override componentDidCatch() {
     this.props.onError();
   }
 
-  render() {
+  override render() {
     return this.state.failed ? null : this.props.children;
   }
 }
