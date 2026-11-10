@@ -17,7 +17,7 @@ export function ImportPairsBox({ league }: ImportPairsBoxProps) {
   const requestRef = useRef(0);
   const previewRef = useRef<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<{ url: string; name: string } | null>(null);
+  const [preview, setPreview] = useState<{ url: string; name: string; width: number; height: number } | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [pasting, setPasting] = useState(false);
@@ -56,7 +56,7 @@ export function ImportPairsBox({ league }: ImportPairsBoxProps) {
       }
       if (previewRef.current) URL.revokeObjectURL(previewRef.current);
       previewRef.current = url;
-      setPreview({ url, name: candidate.name });
+      setPreview({ url, name: candidate.name, width: image.naturalWidth / 2, height: image.naturalHeight / 2 });
       setFile(null);
       if (inputRef.current) inputRef.current.value = '';
     } catch {
@@ -125,7 +125,7 @@ export function ImportPairsBox({ league }: ImportPairsBoxProps) {
             <figcaption className="min-w-0 truncate text-ui-xs text-muted-foreground" title={preview.name}>{preview.name}</figcaption>
             <button type="button" className="btn btn--ghost btn--sm h-8 w-8 shrink-0 p-0" aria-label={`${leagueName} kép eltávolítása`} title="Kép eltávolítása" onClick={remove}><X className="h-4 w-4" aria-hidden="true" /></button>
           </div>
-          <img src={preview.url} alt={`${leagueName} párosítások — feltöltött kép`} className="block max-h-[480px] w-full object-contain" />
+          <img src={preview.url} alt={`${leagueName} párosítások — feltöltött kép`} width={preview.width} height={preview.height} style={{ width: preview.width }} className="mx-auto block h-auto max-w-full object-contain" />
         </figure>
       )}
 
