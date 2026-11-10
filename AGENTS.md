@@ -42,3 +42,5 @@ use the editor.
 - Load timing uses finally-closed phase measurements and worker-reported calculation durations; keep worker calculation separate from main-thread handoff and round-trip time.
 - Bump ENGINE_VERSION in the pipeline whenever calculation logic or its dependencies change, so device results and restored forecasts cannot outlive the engine that produced them.
 - Reuse per-league IndexedDB results only with a verified cloud fingerprint, engine version, match count and raw-input/settings signature; cache failures must fall back to the unchanged pipeline.
+
+- The shared studio team picker uses the attachment-inspired portal/sheet interaction with namespaced tokens in global CSS; keep its accent isolated so other studio controls retain their theme.
