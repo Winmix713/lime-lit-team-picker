@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { AlertCircle, Check, ImagePlus, LoaderCircle, Replace, Upload, X } from 'lucide-react';
+import { AlertCircle, Check, ClipboardPaste, ImagePlus, LoaderCircle, Replace, Upload, X } from 'lucide-react';
 import { LEAGUE_LABEL } from '../../data/leagues';
 import type { League, FixtureRound } from '../../types/winmix';
 import type { TeamOption } from '../../utils/fixtures';
@@ -20,6 +20,7 @@ export function ImportPairsBox({ league }: ImportPairsBoxProps) {
   const [preview, setPreview] = useState<{ url: string; name: string } | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pasting, setPasting] = useState(false);
   const [dragging, setDragging] = useState(false);
   const leagueName = LEAGUE_LABEL[league];
 
@@ -41,10 +42,8 @@ export function ImportPairsBox({ league }: ImportPairsBoxProps) {
     setFile(candidate);
   };
 
-  const upload = async () => {
-    if (!file || loading) return;
-    const request = ++requestRef.current;
-    const url = URL.createObjectURL(file);
+  const upload = async (candidate: File, request = ++requestRef.current) => {
+    const url = URL.createObjectURL(candidate);
     setLoading(true);
     setError('');
     try {
@@ -57,7 +56,7 @@ export function ImportPairsBox({ league }: ImportPairsBoxProps) {
       }
       if (previewRef.current) URL.revokeObjectURL(previewRef.current);
       previewRef.current = url;
-      setPreview({ url, name: file.name });
+      setPreview({ url, name: candidate.name });
       setFile(null);
       if (inputRef.current) inputRef.current.value = '';
     } catch {
@@ -65,6 +64,35 @@ export function ImportPairsBox({ league }: ImportPairsBoxProps) {
       if (request === requestRef.current) setError('A kép nem nyitható meg. Válassz másik fájlt.');
     } finally {
       if (request === requestRef.current) setLoading(false);
+    }
+  };
+
+  const paste = async () => {
+    if (pasting || loading) return;
+    const request = ++requestRef.current;
+    setPasting(true);
+    setError('');
+    try {
+      if (!navigator.clipboard?.read) {
+        setError('Ez a böngésző nem támogatja a kép beillesztését. Válaszd a Kép kiválasztása gombot.');
+        return;
+      }
+      const items = await navigator.clipboard.read();
+      if (request !== requestRef.current) return;
+      for (const item of items) {
+        const type = item.types.find(type => ['image/png', 'image/jpeg', 'image/webp'].includes(type));
+        if (!type) continue;
+        const blob = await item.getType(type);
+        if (request !== requestRef.current) return;
+        const extension = type === 'image/jpeg' ? 'jpg' : type.split('/')[1];
+        await upload(new File([blob], `${leagueName}-beillesztett-kep.${extension}`, { type }), request);
+        return;
+      }
+      setError('A vágólapon nincs kép. Másold ki a kívánt képet, majd próbáld újra.');
+    } catch {
+      if (request === requestRef.current) setError('A vágólap nem érhető el. Engedélyezd a hozzáférést a böngészőben, vagy válassz képfájlt.');
+    } finally {
+      setPasting(false);
     }
   };
 
@@ -114,14 +142,20 @@ export function ImportPairsBox({ league }: ImportPairsBoxProps) {
             <p className="mt-1 text-ui-2xs text-muted-foreground">{file ? `${(file.size / 1024).toFixed(0)} KB · Kiválasztva` : 'PNG, JPG, WebP'}</p>
           </div>
         </div>
-        <button type="button" className="btn btn--ghost btn--sm min-h-11 shrink-0 gap-2 border border-border" onClick={() => inputRef.current?.click()}>
+        <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex sm:flex-wrap">
+        <button type="button" className="btn btn--ghost btn--sm min-h-11 min-w-0 gap-2 whitespace-normal border border-border" disabled={pasting || loading} onClick={() => inputRef.current?.click()}>
           {preview ? <Replace className="h-4 w-4" aria-hidden="true" /> : <ImagePlus className="h-4 w-4" aria-hidden="true" />}
           Kép kiválasztása
         </button>
+        <button type="button" className="btn btn--ghost btn--sm min-h-11 min-w-0 gap-2 border border-border" disabled={pasting || loading} onClick={paste} aria-label={`${leagueName} kép beillesztése`}>
+          {pasting ? <LoaderCircle className="h-4 w-4 shrink-0 animate-spin" aria-hidden="true" /> : <ClipboardPaste className="h-4 w-4 shrink-0" aria-hidden="true" />}
+          {pasting ? 'Beillesztés…' : 'Beillesztés'}
+        </button>
+        </div>
       </div>
 
       <div className="mt-3 flex justify-end">
-        <button type="button" className="btn btn--signal btn--sm min-h-11 gap-2" disabled={!file || loading} onClick={upload} aria-label={`${leagueName} kép feltöltése`}>
+        <button type="button" className="btn btn--signal btn--sm min-h-11 gap-2" disabled={!file || loading || pasting} onClick={() => { if (file) void upload(file); }} aria-label={`${leagueName} kép feltöltése`}>
           {loading ? <LoaderCircle className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Upload className="h-4 w-4" aria-hidden="true" />}
           {loading ? 'Feltöltés…' : 'Feltöltés'}
         </button>
