@@ -9,6 +9,8 @@ const teams = [
   { key: 'fradi', display: 'Ferencváros', played: 32 },
 ];
 
+Object.defineProperty(HTMLElement.prototype, 'scrollIntoView', { configurable: true, value: vi.fn() });
+
 afterEach(cleanup);
 
 function Picker() {
