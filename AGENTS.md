@@ -44,3 +44,4 @@ use the editor.
 - Reuse per-league IndexedDB results only with a verified cloud fingerprint, engine version, match count and raw-input/settings signature; cache failures must fall back to the unchanged pipeline.
 
 - The shared studio team picker uses the attachment-inspired portal/sheet interaction with namespaced tokens in global CSS; keep its accent isolated so other studio controls retain their theme.
+- Pair-image pickers keep independent ephemeral object-URL previews per league; showing a screenshot must not import fixtures or imply persistent cloud storage.
