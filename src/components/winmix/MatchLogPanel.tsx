@@ -90,7 +90,7 @@ export function MatchLogPanel() {
             aria-label="Találati szűrő"
             value={filter}
             onChange={(e) => {setFilter(e.target.value as HitFilter);setLimit(PAGE);}}
-            className="field h-8 text-[12px]">
+            className="field h-8 w-auto text-[12px]">
             <option value="all">Minden mérkőzés</option>
             <option value="hit">1X2 talált</option>
             <option value="miss">1X2 tévedett</option>

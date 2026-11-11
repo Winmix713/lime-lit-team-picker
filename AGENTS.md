@@ -45,3 +45,4 @@ use the editor.
 
 - The shared studio team picker uses the attachment-inspired portal/sheet interaction with namespaced tokens in global CSS; keep its accent isolated so other studio controls retain their theme.
 - Pair-image pickers keep independent ephemeral object-URL previews per league; showing a screenshot must not import fixtures or imply persistent cloud storage.
+- The match log and calibration table apply a display-only, holdout-validated band correction (src/utils/calibrationLab.ts); never write it back into engine results, so engine outputs stay reproducible.
